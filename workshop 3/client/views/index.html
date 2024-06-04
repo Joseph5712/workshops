@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+</head>
+<body>
+    <h1>Careers</h1>
+    <div id="careers"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+    function fetchCareers() {
+        axios.get('http://localhost:3001/api/career/')
+            .then(function (response) {
+                const careers = response.data;
+                const lista = document.getElementById('careers');
+                lista.innerHTML = '';
+                careers.forEach(career => {
+                    const item = document.createElement('div');
+                    item.textContent = `Name: ${career.name} - code: ${career.code}`;
+                    lista.appendChild(item);
+                });
+            })
+            .catch(function (error) {
+                console.log('Error al obtener los clientes:', error);
+            });
+    }
+
+    // Llama a la función al cargar la página
+    window.onload = function() {
+        fetchCareers();
+    };
+</script>
+
+
+    
+</body>
+</html>
