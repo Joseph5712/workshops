@@ -3,38 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+    <title>Careers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Careers</h1>
-    <div id="careers"></div>
+    <div class="container mt-5">
+        <h1 class="mb-4">Careers</h1>
+        <div id="careers" class="mb-4"></div>
+
+        <h2>Add New Career</h2>
+        <form id="addCareerForm" class="mb-4">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" class="form-control" placeholder="Enter career name" required>
+            </div>
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" id="code" class="form-control" placeholder="Enter career code" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" id="description" class="form-control" placeholder="Enter career description" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Career</button>
+        </form>
+
+        <h2>Update Career</h2>
+        <form id="updateCareerForm" class="mb-4">
+            <div class="form-group">
+                <label for="updateId">ID</label>
+                <input type="text" id="updateId" class="form-control" placeholder="Enter career ID" required>
+            </div>
+            <div class="form-group">
+                <label for="updateName">Name</label>
+                <input type="text" id="updateName" class="form-control" placeholder="Enter new career name">
+            </div>
+            <div class="form-group">
+                <label for="updateCode">Code</label>
+                <input type="text" id="updateCode" class="form-control" placeholder="Enter new career code">
+            </div>
+            <div class="form-group">
+                <label for="updateDescription">Description</label>
+                <input type="text" id="updateDescription" class="form-control" placeholder="Enter new career description">
+            </div>
+            <button type="submit" class="btn btn-warning">Update Career</button>
+        </form>
+
+        <h2>Delete Career</h2>
+        <form id="deleteCareerForm" class="mb-4">
+            <div class="form-group">
+                <label for="deleteId">ID</label>
+                <input type="text" id="deleteId" class="form-control" placeholder="Enter career ID" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Delete Career</button>
+        </form>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-    function fetchCareers() {
-        axios.get('http://localhost:3001/api/career/')
-            .then(function (response) {
-                const careers = response.data;
-                const lista = document.getElementById('careers');
-                lista.innerHTML = '';
-                careers.forEach(career => {
-                    const item = document.createElement('div');
-                    item.textContent = `Name: ${career.name} - code: ${career.code}`;
-                    lista.appendChild(item);
+        function fetchCareers() {
+            axios.get('http://localhost:3001/api/career/')
+                .then(function (response) {
+                    const careers = response.data;
+                    const lista = document.getElementById('careers');
+                    lista.innerHTML = '';
+                    careers.forEach(career => {
+                        const item = document.createElement('div');
+                        item.className = 'alert alert-secondary';
+                        item.textContent = `ID: ${career._id} - Name: ${career.name} - Code: ${career.code}`;
+                        lista.appendChild(item);
+                    });
+                })
+                .catch(function (error) {
+                    console.log('Error fetching careers:', error);
                 });
-            })
-            .catch(function (error) {
-                console.log('Error al obtener los clientes:', error);
-            });
-    }
+        }
 
-    // Llama a la función al cargar la página
-    window.onload = function() {
-        fetchCareers();
-    };
-</script>
+        document.getElementById('addCareerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const code = document.getElementById('code').value;
+            const description = document.getElementById('description').value;
 
+            axios.post('http://localhost:3001/api/career/', { name, code, description })
+                .then(function (response) {
+                    fetchCareers();
+                })
+                .catch(function (error) {
+                    console.log('Error adding career:', error);
+                });
+        });
 
-    
+        document.getElementById('updateCareerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const code = document.getElementById('updateCode').value;
+            const description = document.getElementById('updateDescription').value;
+
+            axios.put(`http://localhost:3001/api/career?id=${id}`, { name, code, description })
+                .then(function (response) {
+                    fetchCareers();
+                })
+                .catch(function (error) {
+                    console.log('Error updating career:', error);
+                });
+        });
+
+        document.getElementById('deleteCareerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('deleteId').value;
+
+            axios.delete(`http://localhost:3001/api/career?id=${id}`)
+                .then(function (response) {
+                    fetchCareers();
+                })
+                .catch(function (error) {
+                    console.log('Error deleting career:', error);
+                });
+        });
+
+        window.onload = function() {
+            fetchCareers();
+        };
+    </script>
 </body>
 </html>
