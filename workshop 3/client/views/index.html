@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-5">
+    <class="container mt-5">
         <h1 class="mb-4">Careers</h1>
         <div id="careers" class="mb-4"></div>
 
+        <!--    
         <h2>Add New Career</h2>
         <form id="addCareerForm" class="mb-4">
             <div class="form-group">
@@ -57,6 +58,7 @@
             </div>
             <button type="submit" class="btn btn-danger">Delete Career</button>
         </form>
+        -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -64,17 +66,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        function fetchCareers() {
-            axios.get('http://localhost:3001/api/career/')
+        function fetchCareers() { //buscar carreras
+            axios.get('http://localhost:3001/api/career/') //axion hace una solicitud get a la url
                 .then(function (response) {
-                    const careers = response.data;
+                    const careers = response.data; //aqui se guardan las carreras recibidas del servidor
                     const lista = document.getElementById('careers');
                     lista.innerHTML = '';
                     careers.forEach(career => {
                         const item = document.createElement('div');
-                        item.className = 'alert alert-secondary';
-                        item.textContent = `ID: ${career._id} - Name: ${career.name} - Code: ${career.code}`;
-                        lista.appendChild(item);
+                        item.className = 'alert alert-secondary'; //se declara el nombre para el estilo de bootstrap 
+                        item.textContent = `- Nombre: ${career.name} - Codigo: ${career.code} - Descripcion: ${career.description}`; // asi se muestra en el div
+                        lista.appendChild(item); // aqui se guarda el div al div careers
                     });
                 })
                 .catch(function (error) {
@@ -82,7 +84,7 @@
                 });
         }
 
-        document.getElementById('addCareerForm').addEventListener('submit', function(e) {
+        /*document.getElementById('addCareerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const code = document.getElementById('code').value;
@@ -90,7 +92,7 @@
 
             axios.post('http://localhost:3001/api/career/', { name, code, description })
                 .then(function (response) {
-                    fetchCareers();
+                    fetchCareers(); //actualiza las carreras par no tener que cargar la pagina
                 })
                 .catch(function (error) {
                     console.log('Error adding career:', error);
@@ -124,11 +126,12 @@
                 .catch(function (error) {
                     console.log('Error deleting career:', error);
                 });
-        });
+        });*/
 
-        window.onload = function() {
+        window.onload = function() { // se ejecuta cuando toda la pagina se carga toda
             fetchCareers();
         };
+
     </script>
 </body>
 </html>
