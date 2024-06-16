@@ -1,6 +1,5 @@
 const Course = require("../models/courseModel");
 
-
 /**
  * Creates a course
  *
@@ -14,10 +13,12 @@ const coursePost = async (req, res) => {
       res.status(201); // CREATED
       res.header({
         'location': `/api/courses/?id=${course.id}`
+        
       });
+      
       res.json(course);
     })
-    .catch( err => {
+    .catch(err => {
       res.status(422);
       console.log('error while saving the course', err);
       res.json({
@@ -33,25 +34,33 @@ const coursePost = async (req, res) => {
  * @param {*} res
  */
 const courseGet = (req, res) => {
-  // if an specific teacher is required
   if (req.query && req.query.id) {
+    // Get a specific course by ID
     Course.findById(req.query.id).populate('teacher')
-      .then( (course) => {
+      .then((course) => {
         res.json(course);
       })
       .catch(err => {
         res.status(404);
-        console.log('error while queryting the course', err)
-        res.json({ error: "Course doesnt exist" })
+        console.log('error while querying the course', err);
+        res.json({ error: "Course doesn't exist" });
       });
   } else {
-    // get all teachers
-    Course.find().populate('teacher')
-      .then( courses => {
+    // Get all courses or filter by name and sort
+    const { name, sort } = req.query;
+
+    // Create filter and sort options
+    const filter = name ? { name: new RegExp(name, 'i') } : {};
+    const sortOption = sort === 'desc' ? { name: -1 } : { name: 1 };
+
+    // Find courses with filter and sort
+    Course.find(filter).populate('teacher').sort(sortOption)
+      .then(courses => {
         res.json(courses);
       })
       .catch(err => {
         res.status(422);
+        console.log('error while querying the courses', err);
         res.json({ "error": err });
       });
   }
@@ -60,4 +69,4 @@ const courseGet = (req, res) => {
 module.exports = {
   coursePost,
   courseGet
-}
+};
