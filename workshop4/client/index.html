@@ -9,28 +9,30 @@
 </head>
 <body>
   <div class="container-fluid">
-
     <form action="" method="post">
       <div class="form-group">
-        <label for="">Name Course</label>
+        <label for="name">Name Course</label>
         <input type="text" id="name" name="name" class="form-control" placeholder="" aria-describedby="helpId">
-        
       </div>
       <div class="form-group">
-        <label for="">Credits</label>
+        <label for="credits">Credits</label>
         <input type="text" id="credits" name="credits" class="form-control" placeholder="" aria-describedby="helpId">
-        
       </div>
       <button type="button" class="btn btn-primary" onclick="createCourse(); return false;">Save</button>
     </form>
   </div>
 
   <div class="container">
-    <button onclick="getCourses();">Get Teacher</button>
+    <div class="form-group">
+      <label for="sortOrder">Sort Order</label>
+      <select id="sortOrder" class="form-control">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary" onclick="getCourses();">Get Courses</button>
     <h3>Results:</h3>
     <ul id="result"></ul>
-
   </div>
 </body>
-
 </html>
